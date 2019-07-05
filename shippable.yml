@@ -1,0 +1,13 @@
+language: swift
+
+<language version>:
+  - 5.1
+
+branches:
+  only:
+    - master
+
+build:
+  ci:
+    - 'echo "CI!"'
+
