@@ -10,6 +10,10 @@ final class Device: Codable {
         self.type = type
         self.token = token
     }
+    
+    var records: Children<Device, PushRecord> {
+        return children(\.deviceID)
+    }
 }
 
 extension Device: SQLiteModel { }

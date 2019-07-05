@@ -15,4 +15,7 @@ public func routes(_ router: Router) throws {
     
     let pushController = PushController()
     router.get("push", use: pushController.push)
+    
+    let pushRecordController = PushRecordController()
+    router.get("pushrecord", Device.parameter, use: pushRecordController.read)
 }
