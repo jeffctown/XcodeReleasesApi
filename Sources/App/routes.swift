@@ -1,20 +1,18 @@
 import Vapor
+import XcodeReleasesKit
 
 /// Register your application's routes here.
 public func routes(_ router: Router) throws {
-    // Basic "It works" example
     router.get { req in
         return "It works!"
     }
     
-    // Basic "Hello, world!" example
-    router.get("hello") { req in
-        return "Hello, world!"
-    }
-
-    // Example of configuring a controller
-    let todoController = TodoController()
-    router.get("todos", use: todoController.index)
-    router.post("todos", use: todoController.create)
-    router.delete("todos", Todo.parameter, use: todoController.delete)
+    let deviceController = DeviceController()
+    router.post("device", use: deviceController.create)
+    router.get("device", Device.parameter, use: deviceController.read)
+    router.get("device", use: deviceController.index)
+    router.delete("device", Device.parameter, use: deviceController.delete)
+    
+    let pushController = PushController()
+    router.get("push", use: pushController.push)
 }
