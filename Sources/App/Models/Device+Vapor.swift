@@ -8,7 +8,7 @@
 import Foundation
 import FluentSQLite
 import Vapor
-import XcodeReleasesApiModel
+import XcodeReleasesKit
 
 extension Device {
     var records: Children<Device, PushRecord> {

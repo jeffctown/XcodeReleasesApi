@@ -1,5 +1,4 @@
 import Vapor
-import XcodeReleasesApiModel
 import XcodeReleasesKit
 
 /// Register your application's routes here.

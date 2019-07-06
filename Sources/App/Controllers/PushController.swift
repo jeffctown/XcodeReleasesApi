@@ -8,7 +8,7 @@
 
 import FluentSQL
 import Vapor
-import XcodeReleasesApiModel
+import XcodeReleasesKit
 
 final class PushController {
     

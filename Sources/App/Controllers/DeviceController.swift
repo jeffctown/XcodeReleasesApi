@@ -1,5 +1,5 @@
 import Vapor
-import XcodeReleasesApiModel
+import XcodeReleasesKit
 
 final class DeviceController {
     
