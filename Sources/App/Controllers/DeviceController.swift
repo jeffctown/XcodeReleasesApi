@@ -1,4 +1,5 @@
 import Vapor
+import XcodeReleasesApiModel
 
 final class DeviceController {
     

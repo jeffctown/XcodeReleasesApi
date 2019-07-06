@@ -1,16 +1,16 @@
+//
+//  Device+Vapor.swift
+//  App
+//
+//  Created by Jeff Lett on 7/5/19.
+//
+
+import Foundation
 import FluentSQLite
 import Vapor
+import XcodeReleasesApiModel
 
-final class Device: Codable {
-    var id: Int?
-    var type: String
-    var token: String
-    
-    init(type: String, token: String) {
-        self.type = type
-        self.token = token
-    }
-    
+extension Device {
     var records: Children<Device, PushRecord> {
         return children(\.deviceID)
     }

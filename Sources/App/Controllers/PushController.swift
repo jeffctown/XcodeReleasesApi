@@ -6,8 +6,9 @@
 //  Created by Jeff Lett on 7/4/19.
 //
 
-import Vapor
 import FluentSQL
+import Vapor
+import XcodeReleasesApiModel
 
 final class PushController {
     
