@@ -15,12 +15,14 @@ final class PushController {
     func push(_ req: Request) throws -> Future<HTTPStatus> {
         let payload = APNSPayload()
         return Device.query(on: req).all().flatMap(to: Bool.self) { devices in
+            let logger = try req.make(Logger.self)
+            logger.info("Sending Push to \(devices.count) devices.")
             devices.forEach {
-                print("Pushing to \($0.token)")
+                logger.info("Pushing to \($0.token)")
                 do {
                     _ = try self.pushToDevice($0, payload, req)
                 } catch {
-                    print("Error Pushing to Device Token \(error)")
+                    logger.error("Error Pushing to Device Token \(error)")
                 }
             }
             return req.future(true)
@@ -30,6 +32,7 @@ final class PushController {
     }
         
     func pushToDevice(_ device: Device, _ payload: APNSPayload, _ req: Request) throws -> Future<PushRecord> {
+        let logger = try req.make(Logger.self)
         let payload = APNSPayload()
         payload.title = "New Xcode Release"
         payload.body = "Xcode v11.0 - Tap for Release Notes"
@@ -44,10 +47,14 @@ final class PushController {
         if req.environment.isRelease {
             let filePath = Environment.PUSH_CERTIFICATE_PATH.convertToPathComponents().readable
             guard let path = URL(string: workDir)?.appendingPathComponent(filePath) else {
-                throw Abort(.custom(code: 512, reasonPhrase: "APNS push certificate not found"))
+                let errorMessage = "APNS push certificate not found"
+                logger.error(errorMessage)
+                throw Abort(.custom(code: 512, reasonPhrase: errorMessage))
             }
             guard let certPwd = Environment.PUSH_CERTIFICATE_PWD else {
-                throw Abort(.custom(code: 512, reasonPhrase: "No $PUSH_CERTIFICATE_PWD set on environment. Use `export PUSH_CERTIFICATE_PWD=<password>`"))
+                let errorMessage = "No $PUSH_CERTIFICATE_PWD set on environment. Use `export PUSH_CERTIFICATE_PWD=<password>`"
+                logger.error(errorMessage)
+                throw Abort(.custom(code: 512, reasonPhrase: errorMessage))
             }
             certURL = path
             apnsURL = "https://api.push.apple.com/3/device/"
@@ -55,10 +62,14 @@ final class PushController {
         } else {
             let filePath = Environment.PUSH_DEV_CERTIFICATE_PATH.convertToPathComponents().readable
             guard let path = URL(string: workDir)?.appendingPathComponent(filePath) else {
-                throw Abort(.custom(code: 512, reasonPhrase: "APNS development push certificate not found"))
+                let errorMessage = "APNS development push certificate not found"
+                logger.error(errorMessage)
+                throw Abort(.custom(code: 512, reasonPhrase: errorMessage))
             }
             guard let certPwd = Environment.PUSH_DEV_CERTIFICATE_PWD else {
-                throw Abort(.custom(code: 512, reasonPhrase: "No $PUSH_DEV_CERTIFICATE_PWD set on environment. Use `export PUSH_DEV_CERTIFICATE_PWD=<password>`"))
+                let errorMessage = "No $PUSH_DEV_CERTIFICATE_PWD set on environment. Use `export PUSH_DEV_CERTIFICATE_PWD=<password>`"
+                logger.error(errorMessage)
+                throw Abort(.custom(code: 512, reasonPhrase: errorMessage))
             }
             certURL = path
             apnsURL = "https://api.development.push.apple.com/3/device/"
@@ -66,7 +77,9 @@ final class PushController {
         }
         
         guard let bundleId = Environment.BUNDLE_IDENTIFIER else {
-            throw Abort(.custom(code: 512, reasonPhrase: "No $BUNDLE_IDENTIFIER set on environment. Use `export BUNDLE_IDENTIFIER=<identifier>`"))
+            let errorMessage = "No $BUNDLE_IDENTIFIER set on environment. Use `export BUNDLE_IDENTIFIER=<identifier>`"
+            logger.error(errorMessage)
+            throw Abort(.custom(code: 512, reasonPhrase: errorMessage))
         }
         
         let certPath = certURL.absoluteString.replacingOccurrences(of: "file://", with: "")
@@ -74,10 +87,13 @@ final class PushController {
         let content = APNSPayloadContent(payload: payload)
         let data = try JSONEncoder().encode(content)
         guard let jsonString = String(data: data, encoding: .utf8) else {
-            throw Abort(.custom(code: 512, reasonPhrase: "Invalid APNS payload"))
+            let errorMessage = "Invalid APNS payload"
+            logger.error(errorMessage)
+            throw Abort(.custom(code: 512, reasonPhrase: errorMessage))
         }
         
         let arguments = ["-d", jsonString, "-H", "apns-topic:\(bundleId)", "-H", "apns-expiration: 1", "-H", "apns-priority: 10", "--http2-prior-knowledge", "--cert", "\(certPath):\(password)", apnsURL + device.token]
+        logger.info(arguments.joined(separator: " "))
         
         return try shell.execute(commandName: "curl", arguments: arguments).flatMap(to: PushRecord.self) { data in
             guard data.count != 0 else {
@@ -90,6 +106,7 @@ final class PushController {
                 let record = PushRecord(payload: payload, error: error, deviceID: device.id!)
                 return record.save(on: req)
             } catch _ {
+                logger.error("Unknown Error Parsing Curl Error.")
                 let record = PushRecord(payload: payload, error: .unknown, deviceID: device.id!)
                 return record.save(on: req)
             }
