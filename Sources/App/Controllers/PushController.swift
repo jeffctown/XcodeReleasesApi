@@ -103,6 +103,7 @@ final class PushController {
             do {
                 let decoder = JSONDecoder()
                 let error = try decoder.decode(APNSError.self, from: data)
+                logger.error(error.rawValue)
                 let record = PushRecord(payload: payload, error: error, deviceID: device.id!)
                 return record.save(on: req)
             } catch _ {
