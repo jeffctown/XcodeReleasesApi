@@ -115,7 +115,8 @@ final class PushController {
                 let record = PushRecord(payload: payload, error: error, deviceID: device.id!)
                 return record.save(on: req)
             } catch _ {
-                logger.error("Unknown Error Parsing Curl Error.")
+                let errorMessage = String(data: data, encoding: .utf8)
+                logger.error("Unknown Error Parsing Curl Error. \(errorMessage)")
                 let record = PushRecord(payload: payload, error: .unknown, deviceID: device.id!)
                 return record.save(on: req)
             }
