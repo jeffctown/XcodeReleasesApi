@@ -10,72 +10,81 @@ import FluentSQL
 import Vapor
 import XcodeReleasesKit
 
+protocol PushControllerMessagingBehavior {
+    var url: String { get }
+    var certPath: String { get }
+    var errorNoCert: String { get }
+    var password: String? { get }
+    var errorNoPassword: String { get }
+}
+
 final class PushController {
     
-    func push(_ req: Request) throws -> Future<HTTPStatus> {
-        let payload = APNSPayload()
-        return Device.query(on: req).all().flatMap(to: Bool.self) { devices in
-            let logger = try req.make(Logger.self)
-            logger.info("Sending Push to \(devices.count) devices.")
-            devices.forEach {
-                logger.info("Pushing to \($0.token)")
-                do {
-                    _ = try self.pushToDevice($0, payload, req)
-                } catch {
-                    logger.error("Error Pushing to Device Token \(error)")
-                }
-            }
-            return req.future(true)
-        }.flatMap(to: HTTPStatus.self) { success in
-            return req.future(.ok)
-        }
+    private struct DebugControllerBehavior: PushControllerMessagingBehavior {
+        let url: String = "https://api.development.push.apple.com/3/device/"
+        let certPath: String = Environment.PUSH_DEV_CERTIFICATE_PATH.convertToPathComponents().readable
+        let errorNoCert: String = "APNS development push certificate not found. Use `export PUSH_DEV_CERTIFICATE_PATH=<path>`"
+        let password: String? = Environment.PUSH_DEV_CERTIFICATE_PWD
+        let errorNoPassword: String = "No $PUSH_DEV_CERTIFICATE_PWD set on environment. Use `export PUSH_DEV_CERTIFICATE_PWD=<password>`"
     }
-        
-    func pushToDevice(_ device: Device, _ payload: APNSPayload, _ req: Request) throws -> Future<PushRecord> {
-        let logger = try req.make(Logger.self)
+    
+    private struct ReleaseControllerBehavior: PushControllerMessagingBehavior {
+        let url: String = "https://api.push.apple.com/3/device/"
+        let certPath: String = Environment.PUSH_CERTIFICATE_PATH.convertToPathComponents().readable
+        var errorNoCert: String = "APNS push certificate not found. Use `export PUSH_CERTIFICATE_PATH=<path>`"
+        var password: String? = Environment.PUSH_CERTIFICATE_PWD
+        var errorNoPassword: String = "No $PUSH_CERTIFICATE_PWD set on environment. Use `export PUSH_CERTIFICATE_PWD=<password>`"
+    }
+    
+    func announce(_ req: Request) throws -> Future<[PushRecord]> {
         let payload = APNSPayload()
         payload.title = "New Xcode Release"
         payload.body = "Xcode v11.0 - Tap for Release Notes"
+        return try push(req, payload)
+    }
+    
+    func announce(_ req: Request, release: XcodeRelease) throws -> Future<[PushRecord]> {
+        let payload = APNSPayload()
+        payload.title = "New Xcode Release: \(release.name) \(release.version)"
+        payload.body = "Xcode v\(release.version) is now available for download.  Tap to read the release notes."
+        return try push(req, payload)
+    }
+    
+    private func messagingBehavior(for req: Request) -> PushControllerMessagingBehavior {
+        req.environment.isRelease ? ReleaseControllerBehavior() : DebugControllerBehavior()
+    }
+    
+    private func push(_ req: Request, _ payload: APNSPayload) throws -> Future<[PushRecord]> {
+        let logger = try req.make(Logger.self)
+        return Device.query(on: req).all().flatMap(to: [PushRecord].self) { devices in
+            logger.info("Sending Push to \(devices.count) devices.")
+            return devices.compactMap {
+                logger.info("Pushing to \($0.token)")
+                do {
+                    return try self.pushToDevice($0, payload, req)
+                } catch {
+                    logger.error("Error Pushing to Device Token \(error)")
+                }
+                return nil
+            }.flatten(on: req)
+        }
+    }
         
+    private func pushToDevice(_ device: Device, _ payload: APNSPayload, _ req: Request) throws -> Future<PushRecord> {
+        let logger = try req.make(Logger.self)
         let shell = try req.make(Shell.self)
         
         let workDir = DirectoryConfig.detect().workDir
-        let certURL: URL
-        let apnsURL: String
-        let password: String
+        let messagingBehavior = self.messagingBehavior(for: req)
         
-        if req.environment.isRelease {
-            let filePath = Environment.PUSH_CERTIFICATE_PATH.convertToPathComponents().readable
-            guard let path = URL(string: workDir)?.appendingPathComponent(filePath) else {
-                let errorMessage = "APNS push certificate not found"
-                logger.error(errorMessage)
-                throw Abort(.custom(code: 512, reasonPhrase: errorMessage))
-            }
-            guard let certPwd = Environment.PUSH_CERTIFICATE_PWD else {
-                let errorMessage = "No $PUSH_CERTIFICATE_PWD set on environment. Use `export PUSH_CERTIFICATE_PWD=<password>`"
-                logger.error(errorMessage)
-                throw Abort(.custom(code: 512, reasonPhrase: errorMessage))
-            }
-            certURL = path
-            apnsURL = "https://api.push.apple.com/3/device/"
-            password = certPwd
-        } else {
-            let filePath = Environment.PUSH_DEV_CERTIFICATE_PATH.convertToPathComponents().readable
-            guard let path = URL(string: workDir)?.appendingPathComponent(filePath) else {
-                let errorMessage = "APNS development push certificate not found"
-                logger.error(errorMessage)
-                throw Abort(.custom(code: 512, reasonPhrase: errorMessage))
-            }
-            guard let certPwd = Environment.PUSH_DEV_CERTIFICATE_PWD else {
-                let errorMessage = "No $PUSH_DEV_CERTIFICATE_PWD set on environment. Use `export PUSH_DEV_CERTIFICATE_PWD=<password>`"
-                logger.error(errorMessage)
-                throw Abort(.custom(code: 512, reasonPhrase: errorMessage))
-            }
-            certURL = path
-            apnsURL = "https://api.development.push.apple.com/3/device/"
-            password = certPwd
+        guard let certURL = URL(string: workDir)?.appendingPathComponent(messagingBehavior.certPath) else {
+            logger.error(messagingBehavior.errorNoCert)
+            throw Abort(.custom(code: 512, reasonPhrase: messagingBehavior.errorNoCert))
         }
-        
+        guard let password = messagingBehavior.password else {
+            logger.error(messagingBehavior.errorNoPassword)
+            throw Abort(.custom(code: 512, reasonPhrase: messagingBehavior.errorNoPassword))
+        }
         guard let bundleId = Environment.BUNDLE_IDENTIFIER else {
             let errorMessage = "No $BUNDLE_IDENTIFIER set on environment. Use `export BUNDLE_IDENTIFIER=<identifier>`"
             logger.error(errorMessage)
@@ -83,7 +92,6 @@ final class PushController {
         }
         
         let certPath = certURL.absoluteString.replacingOccurrences(of: "file://", with: "")
-        
         let content = APNSPayloadContent(payload: payload)
         let data = try JSONEncoder().encode(content)
         guard let jsonString = String(data: data, encoding: .utf8) else {
@@ -92,7 +100,7 @@ final class PushController {
             throw Abort(.custom(code: 512, reasonPhrase: errorMessage))
         }
         
-        let arguments = ["-d", jsonString, "-H", "apns-topic:\(bundleId)", "-H", "apns-expiration: 1", "-H", "apns-priority: 10", "--http2-prior-knowledge", "--cert", "\(certPath):\(password)", apnsURL + device.token]
+        let arguments = ["-d", jsonString, "-H", "apns-topic:\(bundleId)", "-H", "apns-expiration: 1", "-H", "apns-priority: 10", "--http2-prior-knowledge", "--cert", "\(certPath):\(password)", messagingBehavior.url + device.token]
         logger.info(arguments.joined(separator: " "))
         
         return try shell.execute(commandName: "curl", arguments: arguments).flatMap(to: PushRecord.self) { data in
@@ -112,9 +120,7 @@ final class PushController {
                 return record.save(on: req)
             }
         }
-        
     }
-    
 }
 
 
