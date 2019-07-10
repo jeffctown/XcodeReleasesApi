@@ -40,6 +40,7 @@ final class PushController {
         let payload = APNSPayload()
         payload.title = "New Xcode Release"
         payload.body = "Xcode v11.0 - Tap for Release Notes"
+        payload.extra["notes"] = "https://developer.apple.com/documentation/xcode_release_notes/xcode_11_beta_3_release_notes"
         return try push(req, payload)
     }
     
@@ -47,6 +48,9 @@ final class PushController {
         let payload = APNSPayload()
         payload.title = "New Xcode Release: \(release.name) \(release.version)"
         payload.body = "Xcode v\(release.version) is now available for download.  Tap to read the release notes."
+        if let url = release.links?.notes?.url {
+            payload.extra["notes"] = url
+        }
         return try push(req, payload)
     }
     
