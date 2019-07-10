@@ -25,17 +25,19 @@ public final class PushRecord: Codable {
     
     // MARK: - Initialization
     
-    public init(payload: APNSPayload, status: DeliveryStatus, deviceID: Int) {
+    public init(payload: APNSPayload, status: DeliveryStatus, deviceID: Int, date: Date = Date()) {
         self.payload = payload
         self.status = status
         self.deviceID = deviceID
+        self.createdAt = date
     }
     
-    public init(payload: APNSPayload, error: APNSError, deviceID: Int) {
+    public init(payload: APNSPayload, error: APNSError, deviceID: Int, date: Date = Date()) {
         self.payload = payload
         self.status = .deliveryFailed
         self.error = error.rawValue
         self.deviceID = deviceID
+        self.createdAt = date
     }
     
 }

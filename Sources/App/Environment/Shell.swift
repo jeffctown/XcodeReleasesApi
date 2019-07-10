@@ -45,6 +45,7 @@ final class Shell: Service {
             let process = Process()
             process.launchPath = command
             process.arguments = arguments
+            print("\(command) \(arguments.joined(separator: " "))")
             
             let pipe = Pipe()
             process.standardOutput = pipe

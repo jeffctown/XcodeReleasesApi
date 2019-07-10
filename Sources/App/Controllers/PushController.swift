@@ -58,6 +58,7 @@ final class PushController {
         let logger = try req.make(Logger.self)
         return Device.query(on: req).all().flatMap(to: [PushRecord].self) { devices in
             logger.info("Sending Push to \(devices.count) devices.")
+            logger.info("Payload: \(payload)")
             return devices.compactMap {
                 logger.info("Pushing to \($0.token)")
                 do {
@@ -100,8 +101,12 @@ final class PushController {
             throw Abort(.custom(code: 512, reasonPhrase: errorMessage))
         }
         
-        let arguments = ["-d", jsonString, "-H", "apns-topic:\(bundleId)", "-H", "apns-expiration: 1", "-H", "apns-priority: 10", "--http2-prior-knowledge", "--cert", "\(certPath):\(password)", messagingBehavior.url + device.token]
-        logger.info(arguments.joined(separator: " "))
+        //curl -X POST -d @Push.json --http2 --cert /var/www/vapor/PushCert.pem https://api.development.push.apple.com/3/device/98c9eef814b1cb501ab6af6732016d8e7bbc4d29898a456fa0abada741aa57c3
+//        linux!!  let arguments = ["-d", "'\(jsonString)'", "-H", "apns-topic:\(bundleId)", "-H", "apns-expiration: 1", "-H", "apns-priority: 10", "--http2-prior-knowledge", "--cert", "\(certPath):\(password)", messagingBehavior.url + device.token]
+        // MAC!! curl -d '{"aps":{"alert":{"title":"New Xcode Release","body":"Xcode v11.0 - Tap for Release Notes"},"contentAvailable":false,"hasMutableContent":false},"extra":{}}' -H apns-topic:com.jefflett.XcodeReleases -H apns-priority: 10 --http2-prior-knowledge --cert /Users/jeff/Documents/XcodeReleases/DevPushCert.pem: https://api.development.push.apple.com/3/device/98c9eef814b1cb501ab6af6732016d8e7bbc4d29898a456fa0abada741aa57c3
+
+        let arguments = ["-d", "\(jsonString)", "-H", "apns-topic:\(bundleId)", "-H", "apns-priority: 10", "--http2-prior-knowledge", "--cert", "\(certPath):\(password)", messagingBehavior.url + device.token]
+        //logger.info(arguments.joined(separator: " "))
         
         return try shell.execute(commandName: "curl", arguments: arguments).flatMap(to: PushRecord.self) { data in
             guard data.count != 0 else {
