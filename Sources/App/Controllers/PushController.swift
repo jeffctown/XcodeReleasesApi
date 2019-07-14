@@ -36,18 +36,37 @@ final class PushController {
         var errorNoPassword: String = "No $PUSH_CERTIFICATE_PWD set on environment. Use `export PUSH_CERTIFICATE_PWD=<password>`"
     }
     
-    func announce(_ req: Request) throws -> Future<[PushRecord]> {
-        let payload = APNSPayload()
-        payload.title = "New Xcode Release"
-        payload.body = "Xcode v11.0 - Tap for Release Notes"
-        payload.extra["notes"] = "https://developer.apple.com/documentation/xcode_release_notes/xcode_11_beta_3_release_notes"
-        return try push(req, payload)
+    func refreshReleases(_ req: Request) throws -> Future<[PushRecord]> {
+        let url = "https://xcodereleases.com/data.json"
+        let client = try req.make(Client.self)
+        let response = client.get(url)
+        let logger = try req.make(Logger.self)
+        
+        return response.flatMap(to: [PushRecord].self) { response in
+            return try response.content.decode([XcodeRelease].self).flatMap({ (newReleases) -> EventLoopFuture<[PushRecord]> in
+                return XcodeRelease.query(on: req).all().flatMap { (existingReleases) -> EventLoopFuture<[PushRecord]> in
+                    var diffSet = Set(newReleases)
+                    diffSet.subtract(existingReleases)
+                    let diff = Array(diffSet).sortedByDate()
+                    logger.info("\(newReleases.count) fetched \(existingReleases.count) existing \(diff.count) new")
+                    _ = diff.map {
+                        $0.save(on: req)
+                    }
+                    return try self.announce(req, releases: diff)
+                }
+            })
+        }
     }
     
-    func announce(_ req: Request, release: XcodeRelease) throws -> Future<[PushRecord]> {
+    private func announce(_ req: Request, releases: [XcodeRelease]) throws -> Future<[PushRecord]> {
+        let logger = try req.make(Logger.self)
+        logger.info("Announcing \(releases.count) new releases.")
         let payload = APNSPayload()
-        payload.title = "New Xcode Release: \(release.name) \(release.version)"
-        payload.body = "Xcode v\(release.version) is now available for download.  Tap to read the release notes."
+        guard let release = releases.last else {
+            throw Abort(.notModified)
+        }
+        payload.title = "Just Released: \(release.displayName)!"
+        payload.body = "\(release.displayName) is now available for download!\n\nTap here to read the release notes."
         if let url = release.links?.notes?.url {
             payload.extra["notes"] = url
         }

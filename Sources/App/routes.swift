@@ -14,8 +14,11 @@ public func routes(_ router: Router) throws {
     router.delete("device", Device.parameter, use: deviceController.delete)
     
     let pushController = PushController()
-    router.get("push", use: pushController.announce)
+    router.get("push", use: pushController.refreshReleases)
     
     let pushRecordController = PushRecordController()
     router.get("pushrecord", Device.parameter, use: pushRecordController.read)
+    
+    let xcodeReleaseController = XcodeReleaseController()
+    router.get("release", use: xcodeReleaseController.index)
 }
