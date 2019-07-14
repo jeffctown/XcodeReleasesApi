@@ -12,6 +12,6 @@ import XcodeReleasesKit
 
 final class XcodeReleaseController {
     func index(_ req: Request) throws -> Future<[XcodeRelease]> {
-        return XcodeRelease.query(on: req).all()
+        return XcodeRelease.query(on: req).sort(\.id, .descending).all()
     }
 }
