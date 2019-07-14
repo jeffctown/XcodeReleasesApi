@@ -48,7 +48,7 @@ final class PushController {
                     var diffSet = Set(newReleases)
                     diffSet.subtract(existingReleases)
                     let diff = Array(diffSet).sortedByDate()
-                    logger.info("\(newReleases.count) fetched \(existingReleases.count) existing \(diff.count) new")
+                    logger.info("\(Date().description): \(newReleases.count) fetched \(existingReleases.count) existing \(diff.count) new")
                     _ = diff.map {
                         $0.save(on: req)
                     }
