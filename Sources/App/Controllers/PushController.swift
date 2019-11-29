@@ -65,6 +65,14 @@ final class PushController {
         guard let release = releases.last else {
             throw Abort(.notModified)
         }
+        
+        let current = Date()
+        guard release.date.year >= Calendar.current.component(.year, from: current),
+            release.date.month >= Calendar.current.component(.month, from: current) else {
+            print("Release From Previous Date?")
+            throw Abort(.unprocessableEntity)
+        }
+        
         payload.title = "Just Released: \(release.displayName)!"
         payload.body = "\(release.displayName) is now available for download!\n\nTap here to read the release notes."
         if let url = release.links?.notes?.url {
@@ -73,8 +81,8 @@ final class PushController {
         return try push(req, payload)
     }
     
-    private func messagingBehavior(for req: Request) -> PushControllerMessagingBehavior {
-        req.environment.isRelease ? ReleaseControllerBehavior() : DebugControllerBehavior()
+    private func messagingBehavior(for device: Device) -> PushControllerMessagingBehavior {
+        device.environment == .production ? ReleaseControllerBehavior() : DebugControllerBehavior()
     }
     
     private func push(_ req: Request, _ payload: APNSPayload) throws -> Future<[PushRecord]> {
@@ -99,7 +107,7 @@ final class PushController {
         let shell = try req.make(Shell.self)
         
         let workDir = DirectoryConfig.detect().workDir
-        let messagingBehavior = self.messagingBehavior(for: req)
+        let messagingBehavior = self.messagingBehavior(for: device)
         
         guard let certURL = URL(string: workDir)?.appendingPathComponent(messagingBehavior.certPath) else {
             logger.error(messagingBehavior.errorNoCert)
