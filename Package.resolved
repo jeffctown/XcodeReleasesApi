@@ -65,15 +65,6 @@
         }
       },
       {
-        "package": "JWT",
-        "repositoryURL": "https://github.com/vapor/jwt.git",
-        "state": {
-          "branch": null,
-          "revision": "4265f12b3f2585b8f5792ba6078c2cda0e4043a1",
-          "version": "3.1.1"
-        }
-      },
-      {
         "package": "Multipart",
         "repositoryURL": "https://github.com/vapor/multipart.git",
         "state": {
