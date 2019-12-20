@@ -4,7 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: xcodereleases:"1.0.0"
     environment:
         env: "prod"
     ports:
