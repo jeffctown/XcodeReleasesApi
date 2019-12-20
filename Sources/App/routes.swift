@@ -1,4 +1,5 @@
 import Vapor
+import VaporAPNS
 import XcodeReleasesKit
 
 /// Register your application's routes here.

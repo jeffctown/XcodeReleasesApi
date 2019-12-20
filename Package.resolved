@@ -192,7 +192,7 @@
       },
       {
         "package": "XcodeReleasesKit",
-        "repositoryURL": "git@github.com:jeffctown/XcodeReleasesKit.git",
+        "repositoryURL": "https://github.com/jeffctown/XcodeReleasesKit.git",
         "state": {
           "branch": "master",
           "revision": "dadcabd6e75f2f22c237053fd7d5f5c4dd25ad90",

@@ -1,5 +1,6 @@
 import FluentSQLite
 import Vapor
+import VaporAPNS
 import XcodeReleasesKit
 
 /// Called before your application initializes.

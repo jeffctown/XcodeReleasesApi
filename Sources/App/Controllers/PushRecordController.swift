@@ -7,6 +7,7 @@
 
 import FluentSQL
 import Vapor
+import VaporAPNS
 import XcodeReleasesKit
 
 final class PushRecordController {

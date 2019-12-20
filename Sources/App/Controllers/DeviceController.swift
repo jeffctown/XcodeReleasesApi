@@ -1,5 +1,5 @@
 import Vapor
-import XcodeReleasesKit
+import VaporAPNS
 
 final class DeviceController {
     
