@@ -17,7 +17,7 @@ let package = Package(
         .package(url: "https://github.com/jeffctown/XcodeReleasesKit.git", .branch("master")),
         
         // 🍎 APNS for Packaging up Requests
-        .package(url: "https://github.com/jeffctown/apns.git", .branch("master")),
+        .package(url: "https://github.com/jeffctown/APNS.git", .branch("master")),
 
         // 💨 Reusable Vapor Components
         .package(url: "https://github.com/jeffctown/VaporAPNS.git", .branch("master"))

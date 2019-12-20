@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "APNS",
+        "repositoryURL": "https://github.com/jeffctown/APNS.git",
+        "state": {
+          "branch": "master",
+          "revision": "77f5f817bfe82143598a727c76e40199fc83e6c4",
+          "version": null
+        }
+      },
+      {
         "package": "Console",
         "repositoryURL": "https://github.com/vapor/console.git",
         "state": {
@@ -179,6 +188,15 @@
           "branch": null,
           "revision": "92a58a9a84e4330500b99fe355a94d29f67abe58",
           "version": "3.3.1"
+        }
+      },
+      {
+        "package": "VaporAPNS",
+        "repositoryURL": "https://github.com/jeffctown/VaporAPNS.git",
+        "state": {
+          "branch": "master",
+          "revision": "21be84b385ea5b0e846d6c5a17534e9f7a589f5a",
+          "version": null
         }
       },
       {
