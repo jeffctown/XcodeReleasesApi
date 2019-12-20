@@ -1,16 +1,12 @@
 version: "3.3"
 services:
-  api:
+  api-dev:
     build:
       context: .
-      dockerfile: Dockerfile-dev
+      dockerfile: Dockerfile
     image: api:dev
     environment:
-      MYSQL_HOST: db
-      MYSQL_USER: test
-      MYSQL_PASSWORD: test
-      MYSQL_DATABASE: test
-      REDIS_HOST: redis
+        env: "dev"
     ports:
       - 8080:8080
     volumes:
@@ -19,10 +15,18 @@ services:
     stdin_open: true
     tty: true
     entrypoint: bash
-  db:
-    image: mysql:5
+  api-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: api:dev
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: test
-      MYSQL_PASSWORD: test
-      MYSQL_DATABASE: test
+        env: "prod"
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/app
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    entrypoint: bash

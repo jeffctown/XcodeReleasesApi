@@ -5,7 +5,6 @@
 //  Created by Jeff Lett on 7/5/19.
 //
 
-import FluentSQL
 import Vapor
 import VaporAPNS
 import XcodeReleasesKit

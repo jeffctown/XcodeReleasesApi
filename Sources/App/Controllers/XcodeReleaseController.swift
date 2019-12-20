@@ -5,8 +5,6 @@
 //  Created by Jeff Lett on 7/13/19.
 //
 
-import Foundation
-import Fluent
 import Vapor
 import XcodeReleasesKit
 
