@@ -5,8 +5,7 @@ FROM swift:5.1.1 as builder
 # In your application, you can use `Environment.custom(name: "docker")` to check if you're in this env
 ARG env
 
-RUN apt-get -qq update && apt-get install -y \
-  libssl-dev zlib1g-dev \
+RUN apt-get -qq update && apt-get install -y libssl-dev zlib1g-dev \
   && rm -r /var/lib/apt/lists/*
 WORKDIR /app
 COPY . .
@@ -21,6 +20,7 @@ RUN apt-get -qq update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   libatomic1 libicu60 libxml2 libcurl4 libz-dev libbsd0 tzdata \
   && rm -r /var/lib/apt/lists/*
 WORKDIR /app
+RUN mkdir -p /var/lib/xcodereleases/data
 COPY --from=builder /build/bin/Run .
 COPY --from=builder /build/lib/* /usr/lib/
 ENV ENVIRONMENT=prod

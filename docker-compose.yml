@@ -10,6 +10,7 @@ services:
       - 80:80
     volumes:
       - .:/app
+      - ../XcodeReleasesData:/var/lib/xcodereleases/data
     working_dir: /app
     stdin_open: true
     tty: true
