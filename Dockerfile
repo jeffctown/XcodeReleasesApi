@@ -17,4 +17,4 @@ WORKDIR /app
 RUN mkdir -p /var/lib/xcodereleases/data
 COPY --from=builder /build/bin/Run .
 COPY --from=builder /build/lib/* /usr/lib/
-ENTRYPOINT ./Run serve --env "prod" --hostname 0.0.0.0 --port 80
+ENTRYPOINT ./Run serve --env "prod" --hostname 0.0.0.0 --port 8080
