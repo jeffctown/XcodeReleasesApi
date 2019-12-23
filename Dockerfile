@@ -17,12 +17,8 @@ WORKDIR /app
 RUN mkdir -p /var/lib/xcodereleases/data
 COPY --from=builder /build/bin/Run .
 COPY --from=builder /build/lib/* /usr/lib/
+ENTRYPOINT ./Run serve --env "prod" --hostname 0.0.0.0 --port 80
 
-
-# WITHOUT DOCKER COMPOSE:
-#
-# uncomment this
-#ENTRYPOINT ./Run serve --env "prod" --hostname 0.0.0.0 --port 80
 # and run these
 #docker build -t xcodereleases .
 #docker run -it -p 80:80 xcodereleases
