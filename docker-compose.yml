@@ -5,7 +5,7 @@ services:
     restart: always
     image: xcodereleases:latest
     ports:
-      - 80:80
+      - 8080:8080
     volumes:
       - ../XcodeReleasesData:/var/lib/xcodereleases/data
     working_dir: /app
