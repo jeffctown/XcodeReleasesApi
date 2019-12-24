@@ -1,9 +1,9 @@
 version: "3.3"
 services:
-  api:
+  xcodereleases:
     build: .
     restart: always
-    image: xcodereleases:latest
+    image: jefflett/xcodereleases
     ports:
       - 8080:8080
     volumes:
