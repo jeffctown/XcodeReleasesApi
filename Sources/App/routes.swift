@@ -19,6 +19,7 @@ public func routes(_ router: Router) throws {
     
     let pushRecordController = PushRecordController()
     router.get("pushrecord", Device.parameter, use: pushRecordController.read)
+    router.get("pushrecord", use: pushRecordController.index)
     
     let xcodeReleaseController = XcodeReleaseController()
     router.get("release", use: xcodeReleaseController.index)

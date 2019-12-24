@@ -17,4 +17,8 @@ final class PushRecordController {
         })
     }
     
+    func index(_ req: Request) throws -> Future<[PushRecord]> {
+        return PushRecord.query(on: req).sort(\.id, .descending).all()
+    }
+    
 }
