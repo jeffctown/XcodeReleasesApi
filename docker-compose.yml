@@ -12,7 +12,7 @@ services:
     stdin_open: true
     tty: true
     environment:
-      - BUNDLE_IDENTIFIER: "com.jefflett.XcodeReleases"
-      - PUSH_DEV_CERTIFICATE_PATH=../XcodeReleaseData/DevPushCert.pem
-      - PUSH_CERTIFICATE_PATH../XcodeReleaseData/PushCert.pem
+      BUNDLE_IDENTIFIER: com.jefflett.XcodeReleases
+      PUSH_DEV_CERTIFICATE_PATH: /var/lib/xcodereleases/data/DevPushCert.pem
+      PUSH_CERTIFICATE_PATH: /var/lib/xcodereleases/data/PushCert.pem
 
