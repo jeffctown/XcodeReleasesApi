@@ -13,6 +13,8 @@ import XcodeReleasesKit
 
 final class PushController {
     
+    let vaporAPNSHandler = try! VaporAPNS()
+    
     func refreshReleases(_ req: Request) throws -> Future<[PushRecord]> {
         let url = "https://xcodereleases.com/data.json"
         let client = try req.make(Client.self)
@@ -57,7 +59,6 @@ final class PushController {
             }
         }.build()
         let data = try JSONEncoder().encode(payload)
-        let vaporAPNSHandler = VaporAPNS()
         return try vaporAPNSHandler.push(req, data)
     }
  
