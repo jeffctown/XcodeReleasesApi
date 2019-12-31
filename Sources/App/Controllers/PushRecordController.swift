@@ -5,6 +5,7 @@
 //  Created by Jeff Lett on 7/5/19.
 //
 
+import APNS
 import Vapor
 import VaporAPNS
 import XcodeReleasesKit

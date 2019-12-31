@@ -1,3 +1,4 @@
+import APNS
 import FluentSQLite
 import Vapor
 import VaporAPNS

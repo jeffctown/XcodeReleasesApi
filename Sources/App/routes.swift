@@ -1,3 +1,4 @@
+import APNS
 import Vapor
 import VaporAPNS
 import XcodeReleasesKit
