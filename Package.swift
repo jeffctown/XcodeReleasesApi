@@ -1,8 +1,11 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.1
 import PackageDescription
 
 let package = Package(
     name: "XcodeReleasesApi",
+    platforms: [
+        .macOS(.v10_15)
+    ],
     products: [
         .library(name: "XcodeReleasesApi", targets: ["App"]),
     ],

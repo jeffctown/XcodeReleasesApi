@@ -6,7 +6,7 @@
         "repositoryURL": "https://github.com/jeffctown/APNS.git",
         "state": {
           "branch": "master",
-          "revision": "430f2519f223e7c74f024ab3c51c2899ed2d0ad8",
+          "revision": "d6e0fb44b930d888b698a07e99aee2928c284be1",
           "version": null
         }
       },
@@ -195,7 +195,7 @@
         "repositoryURL": "https://github.com/jeffctown/VaporAPNS.git",
         "state": {
           "branch": "master",
-          "revision": "63727ec7dfd782371a80020eb04c5d6474bdb075",
+          "revision": "07fbed463c3d7027f070c00c606409b7912f9c9b",
           "version": null
         }
       },
@@ -213,7 +213,7 @@
         "repositoryURL": "https://github.com/jeffctown/XcodeReleasesKit.git",
         "state": {
           "branch": "master",
-          "revision": "2daa5953af0c5e0ad69f2950297260cf6801b675",
+          "revision": "c1885a3939bc55702d927d2a6676afa9ad87d222",
           "version": null
         }
       }
