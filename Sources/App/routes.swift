@@ -4,7 +4,7 @@ import VaporAPNS
 import XcodeReleasesKit
 
 /// Register your application's routes here.
-public func routes(_ router: Router) throws {
+public func routes(_ router: Router, vaporAPNS: VaporAPNS) throws {
     router.get { req in
         return "It works!"
     }
@@ -15,7 +15,7 @@ public func routes(_ router: Router) throws {
     router.get("device", use: deviceController.index)
     router.delete("device", Device.parameter, use: deviceController.delete)
     
-    let pushController = PushController()
+    let pushController = PushController(vaporAPNS: vaporAPNS)
     router.get("push", use: pushController.refreshReleases)
     
     let pushRecordController = PushRecordController()

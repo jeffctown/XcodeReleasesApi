@@ -24,6 +24,7 @@ let package = Package(
 
         // 💨 Reusable Vapor Components
         .package(url: "https://github.com/jeffctown/VaporAPNS.git", .branch("master"))
+        //	.package(path: "../VaporAPNS")
     ],
     targets: [
         .target(name: "App", dependencies: ["FluentSQLite", "Vapor", "APNS", "VaporAPNS", "XcodeReleasesKit"]),

@@ -13,7 +13,11 @@ import XcodeReleasesKit
 
 final class PushController {
     
-    let vaporAPNSHandler = try! VaporAPNS()
+    let vaporAPNS: VaporAPNS
+    
+    init(vaporAPNS: VaporAPNS) {
+        self.vaporAPNS = vaporAPNS
+    }
     
     func refreshReleases(_ req: Request) throws -> Future<[PushRecord]> {
         let url = "https://xcodereleases.com/data.json"
@@ -44,12 +48,13 @@ final class PushController {
             throw Abort(.notModified)
         }
         
-        let current = Date()
-        guard release.date.year >= Calendar.current.component(.year, from: current),
-            release.date.month >= Calendar.current.component(.month, from: current) else {
-            print("Release From Previous Date?")
-            throw Abort(.unprocessableEntity)
-        }
+//11.3 sent multiple notifications
+//        let current = Date()
+//        guard release.date.year >= Calendar.current.component(.year, from: current),
+//            release.date.month >= Calendar.current.component(.month, from: current) else {
+//                print("Release From Previous Date? Released \(release.date.month)/\(release.date.day)/\(release.date.year) but today \(Calendar.current.component(.month, from: current))/\(Calendar.current.component(.day, from: current))/\(Calendar.current.component(.year, from: current))")
+//            throw Abort(.unprocessableEntity)
+//        }
         
         let payload = PayloadBuilder { builder in
             builder.title = "Just Released: \(release.displayName)!"
@@ -59,7 +64,7 @@ final class PushController {
             }
         }.build()
         let data = try JSONEncoder().encode(payload)
-        return try vaporAPNSHandler.push(req, data)
+        return try vaporAPNS.push(req, data)
     }
  
 }
