@@ -1,11 +1,11 @@
 import APNS
+import APNSVapor
 import FluentSQLite
 import Vapor
-import VaporAPNS
 import XcodeReleasesKit
 
 /// Called before your application initializes.
-public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services, vaporAPNS: VaporAPNS) throws {
+public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services, vaporAPNS: APNSVapor) throws {
     // Register providers first
     try services.register(FluentSQLiteProvider())
     
@@ -18,8 +18,8 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     services.register(router, as: Router.self)
 
     // Register middleware
-    var middlewares = MiddlewareConfig() // Create _empty_ middleware config
-    middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
+    var middlewares = MiddlewareConfig()
+    middlewares.use(ErrorMiddleware.self)
     services.register(middlewares)
 
     // Configure a SQLite database

@@ -1,14 +1,10 @@
 import APNS
+import APNSVapor
 import Vapor
-import VaporAPNS
 import XcodeReleasesKit
 
 /// Register your application's routes here.
-public func routes(_ router: Router, vaporAPNS: VaporAPNS) throws {
-    router.get { req in
-        return "It works!"
-    }
-    
+public func routes(_ router: Router, vaporAPNS: APNSVapor) throws {
     let deviceController = DeviceController()
     router.post("device", use: deviceController.create)
     router.get("device", Device.parameter, use: deviceController.read)
