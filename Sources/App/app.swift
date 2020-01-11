@@ -9,7 +9,8 @@ public func app(_ env: Environment) throws -> Application {
     let vaporAPNS = try APNSVapor()
     try configure(&config, &env, &services, vaporAPNS: vaporAPNS)
     let app = try Application(config: config, environment: env, services: services)
-    try vaporAPNS.validate(container: app)
+    try vaporAPNS.validateFilesExist(container: app)
+    try vaporAPNS.validatePasswords(container: app)
     try boot(app)
     return app
 }
