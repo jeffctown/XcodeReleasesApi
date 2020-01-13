@@ -22,10 +22,10 @@ final class PushController {
     func refreshReleases(_ req: Request) throws -> Future<[PushRecord]> {
         let url = "https://xcodereleases.com/data.json"
         let client = try req.make(Client.self)
-        let response = client.get(url)
+        let getReleases = client.get(url)
         let logger = try req.make(Logger.self)
         
-        return response.flatMap(to: [PushRecord].self) { response in
+        return getReleases.flatMap(to: [PushRecord].self) { response in
             return try response.content.decode([XcodeRelease].self).flatMap({ (newReleases) -> EventLoopFuture<[PushRecord]> in
                 return XcodeRelease.query(on: req).all().flatMap { (existingReleases) -> EventLoopFuture<[PushRecord]> in
                     var diffSet = Set(newReleases)

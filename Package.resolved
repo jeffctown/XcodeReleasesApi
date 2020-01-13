@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/jeffctown/APNS.git",
         "state": {
           "branch": null,
-          "revision": "a9a12a3eed6b654175fee080f055a1c19e4ce354",
-          "version": "1.0.0"
+          "revision": "eb060acf82ef49adef370561da8634dfc020b63e",
+          "version": "1.0.3"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/jeffctown/APNSVapor.git",
         "state": {
           "branch": null,
-          "revision": "4a51e5cca6fea64f74f740924687043cca6ebe6f",
-          "version": "1.0.1"
+          "revision": "6aa3d41740a8eca46d42e8534eaff187da801dba",
+          "version": "1.0.3"
         }
       },
       {
