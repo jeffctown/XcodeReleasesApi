@@ -6,26 +6,8 @@
         "repositoryURL": "https://github.com/jeffctown/APNS.git",
         "state": {
           "branch": null,
-          "revision": "eb060acf82ef49adef370561da8634dfc020b63e",
-          "version": "1.0.3"
-        }
-      },
-      {
-        "package": "APNSFluent",
-        "repositoryURL": "https://github.com/jeffctown/APNSFluent.git",
-        "state": {
-          "branch": null,
-          "revision": "03233c834f0b2410fd5b2837002c9f3414776f22",
-          "version": "1.0.0"
-        }
-      },
-      {
-        "package": "APNSVapor",
-        "repositoryURL": "https://github.com/jeffctown/APNSVapor.git",
-        "state": {
-          "branch": null,
-          "revision": "6aa3d41740a8eca46d42e8534eaff187da801dba",
-          "version": "1.0.3"
+          "revision": "c6bcd236f450a03f90f61bf71f9448cf6fa7055f",
+          "version": "1.1.1"
         }
       },
       {
