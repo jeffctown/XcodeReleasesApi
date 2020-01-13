@@ -25,10 +25,10 @@ public func certificates() -> [APNSVapor.Certificate] {
                                                      path: "/var/lib/xcodereleases/data/DevPushCert.pem",
                                                      bundleIdentifier: "com.jefflett.XcodeReleases"))
     certificates.append(APNSVapor.Certificate(environment: .release,
-                                              path: "/var/lib/xcodereleases/data/WatchCertificates.pem",
-                                              bundleIdentifier: "com.jefflett.XcodeReleases.watchkitapp.watchkitextension"))
+                                              path: "/var/lib/xcodereleases/data/WatchAppCertificates.pem",
+                                              bundleIdentifier: "com.jefflett.XcodeReleases.watchkitapp"))
     certificates.append(APNSVapor.Certificate(environment: .development,
-                                              path: "/var/lib/xcodereleases/data/WatchCertificates.pem",
-                                              bundleIdentifier: "com.jefflett.XcodeReleases.watchkitapp.watchkitextension"))
+                                              path: "/var/lib/xcodereleases/data/WatchAppCertificates.pem",
+                                              bundleIdentifier: "com.jefflett.XcodeReleases.watchkitapp"))
     return certificates
 }
