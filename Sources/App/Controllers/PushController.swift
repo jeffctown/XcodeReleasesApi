@@ -47,12 +47,15 @@ final class PushController {
         guard let release = releases.last else {
             throw Abort(.notModified)
         }
+        let releaseData = try JSONEncoder().encode(release)
+        let releaseJson = String(bytes: releaseData, encoding: .utf8)
         
         let payload = PayloadBuilder { builder in
             builder.title = "Just Released: \(release.displayName)!"
             builder.body = "\(release.displayName) is now available for download!\n\nTap here to read the release notes."
             if let url = release.links?.notes?.url {
                 builder.extra["notes"] = url
+                builder.extra["release"] = releaseJson
             }
         }.build()
         let data = try JSONEncoder().encode(payload)
