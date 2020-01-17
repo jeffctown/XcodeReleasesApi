@@ -5,6 +5,7 @@
 //  Created by Jeff Lett on 7/13/19.
 //
 
+import APNS
 import Foundation
 import FluentSQLite
 import Vapor
@@ -34,6 +35,21 @@ extension XcodeRelease: Hashable {
         hasher.combine(links?.notes?.url)
     }
     
+    public func json() throws -> String {
+        let data = try JSONEncoder().encode(self)
+        return String(bytes: data, encoding: .utf8)!
+    }
+    
+    public func payload() -> Payload {
+        PayloadBuilder { builder in
+            builder.title = "Just Released: \(self.displayName)!"
+            builder.body = "\(self.displayName) is now available for download!\n\nTap here to read the release notes."
+            if let url = self.links?.notes?.url {
+                builder.extra["notes"] = url
+                builder.extra["release"] = try! self.json()
+            }
+        }.build()
+    }
 }
 
 extension Sequence where Element == XcodeRelease {
