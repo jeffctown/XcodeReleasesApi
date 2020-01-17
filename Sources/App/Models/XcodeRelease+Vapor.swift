@@ -47,7 +47,7 @@ extension Sequence where Element == XcodeRelease {
                 print("Failed To Create Date: \($1.date)")
                 return false
             }
-            return date0.compare(date1) == . orderedAscending
+            return date0.compare(date1) == .orderedAscending
         }
     }
 }
