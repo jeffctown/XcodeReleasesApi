@@ -20,4 +20,7 @@ public func routes(_ router: Router, vaporAPNS: APNSVapor) throws {
     
     let xcodeReleaseController = XcodeReleaseController()
     router.get("release", use: xcodeReleaseController.index)
+    
+    let linkController = LinkController()
+    router.get("link", use: linkController.index)
 }
