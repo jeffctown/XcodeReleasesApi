@@ -30,7 +30,7 @@ public func certificates() -> [APNSVapor.Certificate] {
     certificates.append(APNSVapor.Certificate(environment: .development,
                                               path: "/var/lib/xcodereleases/data/WatchAppCertificates.pem",
                                               bundleIdentifier: "com.jefflett.XcodeReleases.watchkitapp"))
-    certificates.append(APNSVapor.Certificate(environment: .development,
+    certificates.append(APNSVapor.Certificate(environment: .release,
                                               path: "/var/lib/xcodereleases/data/WatchAppCertificates.pem",
                                               bundleIdentifier: "com.jefflett.XcodeReleases.watchkitapp.complication"))
     certificates.append(APNSVapor.Certificate(environment: .development,
