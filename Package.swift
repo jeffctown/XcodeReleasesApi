@@ -18,9 +18,12 @@ let package = Package(
 
         // 🍎 APNS for Packaging up Requests
         .package(url: "https://github.com/jeffctown/APNS.git", .upToNextMajor(from: "1.0.0")),
+        
+        // 🤖 Xcode Releases Data
+        .package(url: "https://github.com/xcodereleases/data.git", .branch("master"))
     ],
     targets: [
-        .target(name: "App", dependencies: ["Vapor", "APNSVapor", "XcodeReleasesKit"]),
+        .target(name: "App", dependencies: ["Vapor", "APNSVapor", "XcodeReleasesKit", "XCModel"]),
         .target(name: "Run", dependencies: ["App"]),
         .testTarget(name: "AppTests", dependencies: ["App"])
     ]

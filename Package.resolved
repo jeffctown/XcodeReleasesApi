@@ -38,6 +38,15 @@
         }
       },
       {
+        "package": "XcodeReleases",
+        "repositoryURL": "https://github.com/xcodereleases/data.git",
+        "state": {
+          "branch": "master",
+          "revision": "c2282477a7fd7372d7b8cb5d30c98e3956fb4e82",
+          "version": null
+        }
+      },
+      {
         "package": "DatabaseKit",
         "repositoryURL": "https://github.com/vapor/database-kit.git",
         "state": {
