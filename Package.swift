@@ -17,7 +17,7 @@ let package = Package(
         .package(url: "https://github.com/jeffctown/APNS.git", .upToNextMajor(from: "1.0.0")),
         
         // 🤖 Xcode Releases Data (fork)
-        .package(url: "https://github.com/jeffctown/data.git", .branch("master"))
+        .package(url: "https://github.com/jeffctown/XcodeReleasesData.git", .upToNextMajor(from: "1.0.0"))
     ],
     targets: [
         .target(name: "App", dependencies: ["Vapor", "APNSVapor", "XCModel"]),
