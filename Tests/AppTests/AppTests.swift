@@ -32,7 +32,6 @@ final class AppTests: XCTestCase {
         XCTAssertTrue(filteredReleases.contains(newReleases[4]))
     }
     
-    
     func testDateIsDiff() {
         let release1 = Xcode(name: "Xcode", version: Version("1.0"), date: (2020, 8, 20), requires: "")
         let release2 = Xcode(name: "Xcode", version: Version("1.0"), date: (2020, 8, 13), requires: "")

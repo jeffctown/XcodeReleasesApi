@@ -29,7 +29,7 @@ final class PushController {
             return try response.content.decode([Xcode].self).flatMap({ (newReleases) -> EventLoopFuture<[PushRecord]> in
                 return Xcode.query(on: req).all().flatMap { (existingReleases) -> EventLoopFuture<[PushRecord]> in
                     let diff = existingReleases.diff(with: newReleases)
-                    let announcements = diff.filterReleases(before: existingReleases.first)
+                    let announcements = diff.filterReleases(before: existingReleases.last)
                     logger.info("\(Date().description): \(newReleases.count) fetched \(existingReleases.count) existing \(diff.count) new")
                     _ = existingReleases.map {
                         $0.delete(force: true, on: req)
@@ -61,9 +61,13 @@ extension Sequence where Element == Xcode {
         }
         
         return self.filter { (xcode) -> Bool in
-            xcode.date.year >= release.date.year &&
-                xcode.date.month >= release.date.month &&
-                xcode.date.day >= release.date.day
+            guard let xcodeDate = xcode.date.components.date,
+                let lastReleaseDate = release.date.components.date else {
+                    print("Couldn't convert dates.")
+                    return false
+            }
+            
+            return lastReleaseDate.compare(xcodeDate) == .orderedAscending
         }
     }
     
