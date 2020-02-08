@@ -19,15 +19,17 @@ final class AppTests: XCTestCase {
         let lastRelease = Xcode(version: Version("11.1"), date: (2020, 8, 20), requires: "10.3")
         
         let newReleases = [
-            Xcode(name: "Xcode Tools", version: Version("1.1", "asldkj", .gmSeed(1)), date: (2020, 8, 21), requires: "10.3"), //filter
+            Xcode(name: "Xcode Tools", version: Version("1.1", "asldkj", .gmSeed(1)), date: (2020, 8, 19), requires: "10.3"), //filter
             Xcode(name: "Xcode Tools", version: Version("1.1", "asldkj", .gmSeed(1)), date: (2019, 8, 21), requires: "10.3"), //filter
             Xcode(name: "Xcode Tools", version: Version("1.1", "asldkj", .gmSeed(1)), date: (2020, 7, 21), requires: "10.3"), //filter
-            Xcode(name: "Xcode Tools", version: Version("1.1", "asldkj", .gmSeed(1)), date: (2020, 8, 19), requires: "10.3"), //keep
+            Xcode(name: "Xcode Tools", version: Version("1.1", "asldkj", .gmSeed(1)), date: (2020, 8, 21), requires: "10.3"), //keep
             Xcode(name: "Xcode Tools", version: Version("11.0", "asldkj", .gmSeed(1)), date: (2020, 8, 21), requires: "10.3") //keep
         ]
         
         let filteredReleases = newReleases.filterReleases(before: lastRelease)
         XCTAssertEqual(filteredReleases.count, 2)
+        XCTAssertTrue(filteredReleases.contains(newReleases[3]))
+        XCTAssertTrue(filteredReleases.contains(newReleases[4]))
     }
     
     
