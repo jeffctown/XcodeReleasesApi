@@ -28,14 +28,16 @@ final class PushController {
         return getReleases.flatMap(to: [PushRecord].self) { response in
             return try response.content.decode([Xcode].self).flatMap({ (newReleases) -> EventLoopFuture<[PushRecord]> in
                 return Xcode.query(on: req).all().flatMap { (existingReleases) -> EventLoopFuture<[PushRecord]> in
-                    var diffSet = Set(newReleases)
-                    diffSet.subtract(existingReleases)
-                    let diff = Array(diffSet).sortedByDate()
+                    let diff = existingReleases.diff(with: newReleases)
+                    let announcements = diff.filterReleases(before: existingReleases.first)
                     logger.info("\(Date().description): \(newReleases.count) fetched \(existingReleases.count) existing \(diff.count) new")
-                    _ = diff.map {
+                    _ = existingReleases.map {
+                        $0.delete(force: true, on: req)
+                    }
+                    _ = newReleases.reversed().map {
                         $0.save(on: req)
                     }
-                    return try self.announce(req, releases: diff)
+                    return try self.announce(req, releases: announcements)
                 }
             })
         }
@@ -52,4 +54,21 @@ final class PushController {
  
 }
 
+extension Sequence where Element == Xcode {
+    func filterReleases(before release: Xcode?) -> [Xcode] {
+        guard let release = release else {
+            return self as! [Xcode]
+        }
+        
+        return self.filter { (xcode) -> Bool in
+            xcode.date.year >= release.date.year &&
+                xcode.date.month >= release.date.month &&
+                xcode.date.day >= release.date.day
+        }
+    }
+    
+    func diff(with newReleases: [Xcode]) -> [Xcode] {
+        Array(Set(newReleases).subtracting(self))
+    }
+}
 

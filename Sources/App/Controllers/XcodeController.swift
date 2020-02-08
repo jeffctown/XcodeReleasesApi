@@ -10,6 +10,6 @@ import XCModel
 
 final class XcodeController {
     func index(_ req: Request) throws -> Future<[Xcode]> {
-        return Xcode.query(on: req).sort(\.date.year, .descending).sort(\.date.month, .descending).sort(\.date.day, .descending).all()
+        return Xcode.query(on: req).sort(\.id, .descending).all()
     }
 }
