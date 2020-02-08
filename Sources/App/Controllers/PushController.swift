@@ -9,7 +9,7 @@
 import APNS
 import APNSVapor
 import Vapor
-import XcodeReleasesKit
+import XCModel
 
 final class PushController {
     
@@ -26,8 +26,8 @@ final class PushController {
         let logger = try req.make(Logger.self)
         
         return getReleases.flatMap(to: [PushRecord].self) { response in
-            return try response.content.decode([XcodeRelease].self).flatMap({ (newReleases) -> EventLoopFuture<[PushRecord]> in
-                return XcodeRelease.query(on: req).all().flatMap { (existingReleases) -> EventLoopFuture<[PushRecord]> in
+            return try response.content.decode([Xcode].self).flatMap({ (newReleases) -> EventLoopFuture<[PushRecord]> in
+                return Xcode.query(on: req).all().flatMap { (existingReleases) -> EventLoopFuture<[PushRecord]> in
                     var diffSet = Set(newReleases)
                     diffSet.subtract(existingReleases)
                     let diff = Array(diffSet).sortedByDate()
@@ -41,16 +41,13 @@ final class PushController {
         }
     }
     
-    private func announce(_ req: Request, releases: [XcodeRelease]) throws -> Future<[PushRecord]> {
+    private func announce(_ req: Request, releases: [Xcode]) throws -> Future<[PushRecord]> {
         let logger = try req.make(Logger.self)
         logger.info("Announcing \(releases.count) new releases.")
         guard let release = releases.last else {
             throw Abort(.notModified)
         }
-      
-        let payload = release.payload()
-        let data = try JSONEncoder().encode(payload)
-        return try vaporAPNS.push(req, data)
+        return try vaporAPNS.push(req: req, encodable: release)
     }
  
 }

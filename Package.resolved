@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/jeffctown/APNS.git",
         "state": {
           "branch": null,
-          "revision": "104f8758c7eda435bad15f4eb2963c2b16b6e5ba",
-          "version": "1.2.3"
+          "revision": "8c55a1035fb36b8b361260589347147f86f458b3",
+          "version": "1.3.0"
         }
       },
       {
@@ -39,10 +39,10 @@
       },
       {
         "package": "XcodeReleases",
-        "repositoryURL": "https://github.com/xcodereleases/data.git",
+        "repositoryURL": "https://github.com/jeffctown/data.git",
         "state": {
           "branch": "master",
-          "revision": "c2282477a7fd7372d7b8cb5d30c98e3956fb4e82",
+          "revision": "e30f4fbf84122c6ca4d875c0e0725cdc4ea6bc5d",
           "version": null
         }
       },
@@ -206,15 +206,6 @@
           "branch": null,
           "revision": "d85e5b6dce4d04065865f77385fc3324f98178f6",
           "version": "1.1.2"
-        }
-      },
-      {
-        "package": "XcodeReleasesKit",
-        "repositoryURL": "https://github.com/jeffctown/XcodeReleasesKit.git",
-        "state": {
-          "branch": null,
-          "revision": "cdec058110b7eb95aa02bc023f3ec69202efc292",
-          "version": "1.0.3"
         }
       }
     ]

@@ -2,7 +2,7 @@ import APNS
 import APNSVapor
 import FluentSQLite
 import Vapor
-import XcodeReleasesKit
+import XCModel
 
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services, vaporAPNS: APNSVapor) throws {
@@ -34,6 +34,6 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     var migrations = MigrationConfig()
     migrations.add(model: Device.self, database: .sqlite)
     migrations.add(model: PushRecord.self, database: .sqlite)
-    migrations.add(model: XcodeRelease.self, database: .sqlite)
+    migrations.add(model: Xcode.self, database: .sqlite)
     services.register(migrations)
 }

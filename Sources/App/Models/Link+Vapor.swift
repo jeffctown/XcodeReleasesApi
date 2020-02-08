@@ -6,6 +6,7 @@
 //
 
 import Vapor
-import XcodeReleasesKit
+import XCModel
 
+// MARK: - Vapor
 extension Link: Content { }

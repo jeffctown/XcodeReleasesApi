@@ -1,7 +1,6 @@
 import APNS
 import APNSVapor
 import Vapor
-import XcodeReleasesKit
 
 /// Register your application's routes here.
 public func routes(_ router: Router, vaporAPNS: APNSVapor) throws {
@@ -18,7 +17,7 @@ public func routes(_ router: Router, vaporAPNS: APNSVapor) throws {
     router.get("pushrecord", Device.parameter, use: pushRecordController.read)
     router.get("pushrecord", use: pushRecordController.index)
     
-    let xcodeReleaseController = XcodeReleaseController()
+    let xcodeReleaseController = XcodeController()
     router.get("release", use: xcodeReleaseController.index)
     
     let linkController = LinkController()

@@ -12,18 +12,15 @@ let package = Package(
     dependencies: [
         // 💧 A server-side Swift web framework.
         .package(url: "https://github.com/vapor/vapor.git", .upToNextMajor(from: "3.0.0")),
-        
-        // 🤖 Xcode Models Shared with Client
-        .package(url: "https://github.com/jeffctown/XcodeReleasesKit.git", .upToNextMajor(from: "1.0.0")),
 
-        // 🍎 APNS for Packaging up Requests
+        // 🍎 APNS for Sending Remote and PkPush Notifications
         .package(url: "https://github.com/jeffctown/APNS.git", .upToNextMajor(from: "1.0.0")),
         
-        // 🤖 Xcode Releases Data
-        .package(url: "https://github.com/xcodereleases/data.git", .branch("master"))
+        // 🤖 Xcode Releases Data (fork)
+        .package(url: "https://github.com/jeffctown/data.git", .branch("master"))
     ],
     targets: [
-        .target(name: "App", dependencies: ["Vapor", "APNSVapor", "XcodeReleasesKit", "XCModel"]),
+        .target(name: "App", dependencies: ["Vapor", "APNSVapor", "XCModel"]),
         .target(name: "Run", dependencies: ["App"]),
         .testTarget(name: "AppTests", dependencies: ["App"])
     ]
