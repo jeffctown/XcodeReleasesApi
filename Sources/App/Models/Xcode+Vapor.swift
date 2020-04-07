@@ -13,7 +13,9 @@ import Vapor
 import XCModel
 
 // MARK: - Fluent
-extension Xcode: Migration { }
+extension Xcode: Migration {
+    public typealias Database = SQLiteDatabase
+}
 extension Xcode: SQLiteModel {
     public typealias ID = Int
 }
