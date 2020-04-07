@@ -7,3 +7,4 @@ DerivedData/
 Certs/
 db.sqlite
 .env
+.idea/

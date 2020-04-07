@@ -9,4 +9,4 @@ XcodeReleasesApi is a Vapor API that can load, save, and deliver Xcode releases 
 
 | Build Status
 | --------------| 
-[![Travis CI](https://travis-ci.org/jeffctown/XcodeReleasesApi.svg?branch=master)](https://travis-ci.org/jeffctown/APNS)
+![Deploy](https://github.com/jeffctown/XcodeReleasesApi/workflows/Deploy/badge.svg)
