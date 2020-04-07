@@ -38,15 +38,6 @@ extension Xcode: APNSVaporEncodable {
         }.build()
     }
     
-    public func payloadForComplication() -> Payload {
-        PayloadBuilder { builder in
-            builder.extra["release"] = try! self.json()
-            if let url = self.links?.notes?.url {
-                builder.extra["notes"] = url.absoluteString
-            }
-        }.build()
-    }
-    
     public func json() throws -> String {
         let data = try JSONEncoder().encode(self)
         return String(bytes: data, encoding: .utf8)!
