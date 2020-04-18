@@ -21,4 +21,4 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
-        script: cd /var/www/xcodereleases.jefflett.com/XcodeReleasesApi && docker-compose down && docker-compose pull && docker-compose up --remove-orphans --detach
+        script: cd /var/www/xcodereleases.jefflett.com/XcodeReleasesApi && docker-compose down && docker pull jefflett/xcodereleases && docker-compose up --remove-orphans --detach
