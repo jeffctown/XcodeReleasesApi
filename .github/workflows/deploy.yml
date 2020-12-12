@@ -18,7 +18,14 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     - uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
-        script: cd /var/www/xcodereleases.jefflett.com/XcodeReleasesApi && docker-compose down && docker pull jefflett/xcodereleases && docker-compose up --remove-orphans --detach
+        image: xcodereleases
+        registry: 905150974947.dkr.ecr.us-east-1.amazonaws.com
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    # - uses: appleboy/ssh-action@master
+    #   with:
+    #     host: ${{ secrets.HOST }}
+    #     username: ${{ secrets.USERNAME }}
+    #     key: ${{ secrets.KEY }}
+    #     script: cd /var/www/xcodereleases.jefflett.com/XcodeReleasesApi && docker-compose down && docker pull jefflett/xcodereleases && docker-compose up --remove-orphans --detach
