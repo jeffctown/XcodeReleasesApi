@@ -16,7 +16,7 @@ jobs:
         registry: docker.io
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-    - uses: appleboy/ssh-action@master
+    - uses: mr-smithers-excellent/docker-build-push@v5
       with:
         image: xcodereleases
         registry: 905150974947.dkr.ecr.us-east-1.amazonaws.com
