@@ -18,7 +18,7 @@ jobs:
     #     password: ${{ secrets.DOCKER_PASSWORD }}
     - uses: mr-smithers-excellent/docker-build-push@v5
       with:
-        image: xcodereleases
+        image: xcodereleasesapi
         registry: 905150974947.dkr.ecr.us-east-1.amazonaws.com
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
